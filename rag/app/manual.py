@@ -148,7 +148,7 @@ class Docx(DocxParser):
             sum_question = '\n'.join(question_stack)
             if sum_question:
                 ti_list.append((f'{sum_question}\n{last_answer}', last_image))
-                
+
         tbls = []
         for tb in self.doc.tables:
             html= "<table>"
@@ -269,14 +269,17 @@ def chunk(filename, binary=None, from_page=0, to_page=100000,
         return res
     else:
         raise NotImplementedError("file type not supported yet(pdf and docx supported)")
-    
+
 
 if __name__ == "__main__":
     import sys
 
-
     def dummy(prog=None, msg=""):
-        pass
+        print(f"Callback: {msg}")
 
+    file_path = "/Users/spencerz/Downloads/docs/zhCN Women's Core Product Comparison Chart - figure.pdf"
+    results = chunk(file_path, callback=dummy)
 
-    chunk(sys.argv[1], callback=dummy)
+    # 打印解析结果
+    for res in results:
+        print(res)

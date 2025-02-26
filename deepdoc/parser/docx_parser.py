@@ -137,3 +137,36 @@ class RAGFlowDocxParser:
 
         tbls = [self.__extract_table_content(tb) for tb in self.doc.tables]
         return secs, tbls
+
+    def test_parser(self, file_path):
+        """
+        测试 RAGFlowDocxParser 对指定本地文件的解析效果。
+
+        :param file_path: str，本地 .docx 文件路径
+        """
+        print(f"正在解析文件: {file_path}")
+
+        try:
+            # 解析文档
+            secs, tbls = self(file_path)
+
+            # 打印段落内容
+            print("\n===== 文档段落内容 =====")
+            for sec, style in secs:
+                print(f"[{style}] {sec}")
+
+            # 打印表格内容
+            print("\n===== 表格内容 =====")
+            for i, tbl in enumerate(tbls, 1):
+                print(f"表格 {i}:")
+                for row in tbl:
+                    print(row)
+
+            print("\n解析完成！")
+        except Exception as e:
+            print(f"解析失败，错误信息: {e}")
+
+
+if __name__ == "__main__":
+    parser = RAGFlowDocxParser()
+    parser.test_parser("/Users/spencerz/Downloads/如何与 AI 更好的交流.docx")

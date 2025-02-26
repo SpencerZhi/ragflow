@@ -303,11 +303,12 @@ def chunk(filename, binary=None, from_page=0, to_page=100000,
 
 
 if __name__ == "__main__":
-    import sys
-
-
     def dummy(prog=None, msg=""):
-        pass
+        print(f"Callback: {msg}")
 
+    file_path = "/Users/spencerz/Downloads/11111.xlsx"
+    results = chunk(file_path, callback=dummy)
 
-    chunk(sys.argv[1], from_page=0, to_page=10, callback=dummy)
+    # 打印解析结果
+    for res in results:
+        print(res)

@@ -287,8 +287,13 @@ def chunk(filename, binary=None, from_page=0, to_page=100000,
 """
 
 if __name__ == "__main__":
-    import sys
 
     def dummy(prog=None, msg=""):
-        pass
-    chunk(sys.argv[1], callback=dummy)
+        print(f"Callback: {msg}")
+
+    file_path = "/Users/spencerz/Downloads/docs/zhCN Women's Core Product Comparison Chart - figure.pdf"
+    results = chunk(file_path, callback=dummy)
+
+    # 打印解析结果
+    for res in results:
+        print(res)

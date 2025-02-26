@@ -142,6 +142,12 @@ def chunk(filename, binary=None, from_page=0, to_page=100000,
 if __name__ == "__main__":
     import sys
 
-    def dummy(a, b):
-        pass
-    chunk(sys.argv[1], callback=dummy)
+    def dummy(prog=None, msg=""):
+        print(f"Callback: {msg}")
+
+    file_path = "/Users/spencerz/Downloads/自然堂测试ppt.pptx"
+    results = chunk(file_path, callback=dummy)
+
+    # 打印解析结果
+    for res in results:
+        print(res)

@@ -17,7 +17,7 @@ import os
 from datetime import date
 from enum import IntEnum, Enum
 import rag.utils.es_conn
-import rag.utils.infinity_conn
+# import rag.utils.infinity_conn
 
 import rag.utils
 from rag.nlp import search
@@ -167,7 +167,8 @@ def init_settings():
     if lower_case_doc_engine == "elasticsearch":
         docStoreConn = rag.utils.es_conn.ESConnection()
     elif lower_case_doc_engine == "infinity":
-        docStoreConn = rag.utils.infinity_conn.InfinityConnection()
+        pass
+        # docStoreConn = rag.utils.infinity_conn.InfinityConnection()
     else:
         raise Exception(f"Not supported doc engine: {DOC_ENGINE}")
 

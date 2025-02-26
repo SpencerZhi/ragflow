@@ -15,6 +15,7 @@
 #
 
 import logging
+import os
 from io import BytesIO
 from pptx import Presentation
 
@@ -66,3 +67,36 @@ class RAGFlowPptParser(object):
             txts.append("\n".join(texts))
 
         return txts
+
+    def test_ppt_parser(self, ppt_file):
+        """
+        测试 RAGFlowPptParser，解析本地 PPTX 文件，并输出解析内容
+        :param ppt_file: 本地 PPTX 文件路径
+        """
+        # 确保文件存在
+        if not os.path.exists(ppt_file):
+            print(f"文件 {ppt_file} 不存在，请检查路径")
+            return
+
+        print(f"正在解析: {ppt_file} ...")
+
+        try:
+            # 解析 PPT，获取文本内容
+            extracted_texts = self(ppt_file, from_page=0, to_page=100)  # 用实例调用 __call__
+
+            # 输出解析结果
+            for i, text in enumerate(extracted_texts):
+                print(f"\n===== 幻灯片 {i + 1} =====")
+                print(text)
+
+            print("\n解析完成！")
+
+        except Exception as e:
+            print(f"解析失败: {e}")
+
+
+if __name__ == "__main__":
+    ppt_path = "/Users/spencerz/Downloads/showzero.pptx"
+    parser = RAGFlowPptParser()
+
+    parser.test_ppt_parser(ppt_path)
