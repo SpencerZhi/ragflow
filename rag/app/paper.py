@@ -205,6 +205,9 @@ def chunk(filename, binary=None, from_page=0, to_page=100000,
         chunks.append(txt)
         last_sid = sec_id
     res.extend(tokenize_chunks(chunks, doc, eng, pdf_parser))
+
+    # 对表格和文本内容进行排序，确保返回顺序符合文档原始顺序
+    res.sort(key=lambda x: (x['page_num_int'][0], x['top_int'][0] if 'top_int' in x else float('inf')))
     return res
 
 
@@ -291,9 +294,9 @@ if __name__ == "__main__":
     def dummy(prog=None, msg=""):
         print(f"Callback: {msg}")
 
-    file_path = "/Users/spencerz/Downloads/docs/zhCN Women's Core Product Comparison Chart - figure.pdf"
+    file_path = "/Users/spencerz/Downloads/Manus  闭门会 分享.pdf"
     results = chunk(file_path, callback=dummy)
 
     # 打印解析结果
     for res in results:
-        print(res)
+        print("==========" + res["content_with_weight"])

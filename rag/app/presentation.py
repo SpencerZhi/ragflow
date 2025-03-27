@@ -34,15 +34,18 @@ class Ppt(PptParser):
         import aspose.slides as slides
         import aspose.pydrawing as drawing
         imgs = []
-        with slides.Presentation(BytesIO(fnm)) as presentation:
-            for i, slide in enumerate(presentation.slides[from_page: to_page]):
-                buffered = BytesIO()
-                slide.get_thumbnail(
-                    0.5, 0.5).save(
-                    buffered, drawing.imaging.ImageFormat.jpeg)
-                imgs.append(Image.open(buffered))
-        assert len(imgs) == len(
-            txts), "Slides text and image do not match: {} vs. {}".format(len(imgs), len(txts))
+
+        # 读取文件内容作为字节流
+        with open(fnm, 'rb') as f:
+            with slides.Presentation(BytesIO(f.read())) as presentation:
+                for i, slide in enumerate(presentation.slides[from_page: to_page]):
+                    buffered = BytesIO()
+                    slide.get_thumbnail(
+                        0.5, 0.5).save(
+                        buffered, drawing.imaging.ImageFormat.jpeg)
+                    imgs.append(Image.open(buffered))
+
+        assert len(imgs) == len(txts), "Slides text and image do not match: {} vs. {}".format(len(imgs), len(txts))
         callback(0.9, "Image extraction finished")
         self.is_english = is_english(txts)
         return [(txts[i], imgs[i]) for i in range(len(txts))]
@@ -145,7 +148,7 @@ if __name__ == "__main__":
     def dummy(prog=None, msg=""):
         print(f"Callback: {msg}")
 
-    file_path = "/Users/spencerz/Downloads/自然堂测试ppt.pptx"
+    file_path = "/Users/spencerz/Downloads/showzero.pptx"
     results = chunk(file_path, callback=dummy)
 
     # 打印解析结果

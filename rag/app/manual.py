@@ -277,7 +277,7 @@ if __name__ == "__main__":
     def dummy(prog=None, msg=""):
         print(f"Callback: {msg}")
 
-    file_path = "/Users/spencerz/Downloads/docs/zhCN Women's Core Product Comparison Chart - figure.pdf"
+    file_path = "/Users/spencerz/Downloads/docs/《员工手册》2.0版.-福建亲亲股份有限公司.pdf"
     results = chunk(file_path, callback=dummy)
 
     # 打印解析结果

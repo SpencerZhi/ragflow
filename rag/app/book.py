@@ -153,5 +153,11 @@ if __name__ == "__main__":
     import sys
 
     def dummy(prog=None, msg=""):
-        pass
-    chunk(sys.argv[1], from_page=1, to_page=10, callback=dummy)
+        print(f"Callback: {msg}")
+
+    file_path = "/Users/spencerz/Downloads/docs/《员工手册》2.0版.-福建亲亲股份有限公司.pdf"
+    results = chunk(file_path, callback=dummy)
+
+    # 打印解析结果
+    for res in results:
+        print(res)

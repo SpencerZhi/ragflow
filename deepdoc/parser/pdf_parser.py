@@ -25,6 +25,7 @@ import pdfplumber
 from PIL import Image
 import numpy as np
 from pypdf import PdfReader as pdf2_read
+import fitz  # PyMuPDF，用于提取嵌入式图片
 
 from api import settings
 from api.utils.file_utils import get_project_base_directory
@@ -289,7 +290,7 @@ class RAGFlowPdfParser:
               "page_number": pagenum} for b, t in bxs if b[0][0] <= b[1][0] and b[0][1] <= b[-1][1]],
             self.mean_height[-1] / 3
         )
-        
+
         # merge chars in the same rect
         for c in Recognizer.sort_Y_firstly(
                 chars, self.mean_height[pagenum - 1] // 4):
@@ -961,7 +962,7 @@ class RAGFlowPdfParser:
             except Exception as e:
                 logging.warning(f"Failed to extract characters for pages {page_from}-{page_to}: {str(e)}")
                 self.page_chars = [[] for _ in range(page_to - page_from)]  # If failed to extract, using empty list instead.
-                
+
             self.total_page = len(self.pdf.pages)
         except Exception:
             logging.exception("RAGFlowPdfParser __images__")
@@ -1180,3 +1181,35 @@ class PlainParser(object):
 
 if __name__ == "__main__":
     pass
+
+import os
+
+def extract_embedded_images(pdf_path, output_dir):
+    """
+    提取PDF中嵌入的原始图片资源并保存到指定输出目录。
+
+    参数:
+      pdf_path: PDF文件路径
+      output_dir: 图片保存的目标文件夹（不存在时会自动创建）
+    """
+    # 打开PDF文档
+    doc = fitz.open(pdf_path)
+    # 如果输出目录不存在，则创建
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    # 遍历PDF中的每一页
+    for page_index in range(len(doc)):
+        page = doc[page_index]
+        image_list = page.get_images(full=True)
+        if image_list:
+            print(f"Page {page_index+1} - 共找到 {len(image_list)} 张图片")
+        # 遍历当前页中的每个图片
+        for image_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image_ext = base_image["ext"]
+            image_filename = os.path.join(output_dir, f"page{page_index+1}_img{image_index+1}.{image_ext}")
+            with open(image_filename, "wb") as f:
+                f.write(image_bytes)
+            print(f"已提取: {image_filename}")
